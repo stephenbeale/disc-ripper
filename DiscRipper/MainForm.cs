@@ -69,7 +69,9 @@ public partial class MainForm : Form
         _contOutputDrive.Items.Clear();
         foreach (var drive in fixedDrives)
         {
-            var display = $"{drive.Letter} ({drive.Label})";
+            var display = string.IsNullOrWhiteSpace(drive.Label)
+                ? drive.Letter
+                : $"{drive.Label} ({drive.Letter})";
             _ripOutputDrive.Items.Add(display);
             _contOutputDrive.Items.Add(display);
         }
@@ -196,7 +198,7 @@ public partial class MainForm : Form
         return new ContinueOptions
         {
             Title = _contTitle.Text.Trim(),
-            FromStep = _contFromStep.SelectedItem?.ToString() ?? "handbrake",
+            FromStep = (_contFromStep.SelectedItem?.ToString() ?? "handbrake").ToLowerInvariant(),
             ContentType = contentType,
             Bluray = _contBluray.Checked,
             Season = (int)_contSeason.Value,
@@ -210,7 +212,12 @@ public partial class MainForm : Form
     private string GetSelectedOutputDrive(ComboBox combo)
     {
         var text = combo.SelectedItem?.ToString() ?? "";
-        // Extract drive letter from "E: (label)" format
+        // Extract drive letter — could be "Label (E:)" or just "E:"
+        var parenStart = text.LastIndexOf('(');
+        var parenEnd = text.LastIndexOf(')');
+        if (parenStart >= 0 && parenEnd > parenStart)
+            return text[(parenStart + 1)..parenEnd];
+        // Fallback: take first token
         var spaceIdx = text.IndexOf(' ');
         return spaceIdx > 0 ? text[..spaceIdx] : (text.Length > 0 ? text : _settings.DefaultOutputDrive);
     }

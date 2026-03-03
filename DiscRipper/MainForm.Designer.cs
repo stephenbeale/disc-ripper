@@ -88,11 +88,11 @@ partial class MainForm
         var y = 8;
         AddLabel(leftPanel, "TITLE", ref y);
         _ripTitle = AddTextBox(leftPanel, ref y);
-        _ripAutoDiscover = AddCheckBox(leftPanel, "Auto-discover (leave title blank)", ref y);
+        _ripAutoDiscover = AddCheckBox(leftPanel, "Auto-detect title", ref y);
         _ripAutoDiscover.Checked = true;
         y += 8;
 
-        AddLabel(leftPanel, "CONTENT TYPE", ref y);
+        AddLabel(leftPanel, "TYPE", ref y);
         _ripContentType = AddComboBox(leftPanel, Enum.GetNames<Models.ContentType>(), ref y);
         _ripContentType.SelectedIndexChanged += (_, _) => UpdateRipSeriesVisibility();
         y += 4;
@@ -106,7 +106,7 @@ partial class MainForm
             Text = "SERIES OPTIONS",
             ForeColor = Color.FromArgb(180, 180, 180),
             Location = new Point(12, y),
-            Size = new Size(260, 80),
+            Size = new Size(330, 80),
             Font = new Font("Segoe UI", 8.5f)
         };
         _ripSeason = AddNumericInGroup(_ripSeriesGroup, "Season:", 0, 0, 99, 12, 24);
@@ -114,28 +114,27 @@ partial class MainForm
         leftPanel.Controls.Add(_ripSeriesGroup);
         y += 90;
 
-        AddLabel(leftPanel, "DISC SETTINGS", ref y);
-        _ripDisc = AddNumericField(leftPanel, "Disc #:", 1, 1, 99, ref y);
+        _ripDisc = AddNumericField(leftPanel, "Disc number:", 1, 1, 99, ref y);
         y += 4;
 
-        AddLabel(leftPanel, "Drive:", ref y, indent: true);
+        AddLabel(leftPanel, "SOURCE DRIVE", ref y);
         _ripDrivePanel = new FlowLayoutPanel
         {
             Location = new Point(24, y),
-            Size = new Size(250, 60),
+            Size = new Size(320, 60),
             FlowDirection = FlowDirection.TopDown,
             AutoSize = true
         };
         leftPanel.Controls.Add(_ripDrivePanel);
         y += 64;
 
-        AddLabel(leftPanel, "Output:", ref y, indent: true);
+        AddLabel(leftPanel, "SAVE TO", ref y);
         _ripOutputDrive = AddComboBox(leftPanel, [], ref y);
         y += 8;
 
-        AddLabel(leftPanel, "FLAGS", ref y);
-        _ripExtras = AddCheckBox(leftPanel, "Extras disc", ref y);
-        _ripQueue = AddCheckBox(leftPanel, "Queue mode", ref y);
+        AddLabel(leftPanel, "OPTIONS", ref y);
+        _ripExtras = AddCheckBox(leftPanel, "This is an extras/bonus disc", ref y);
+        _ripQueue = AddCheckBox(leftPanel, "Add to queue (encode later)", ref y);
         y += 16;
 
         _ripStartButton = AddButton(leftPanel, "Start Rip", ref y, primary: true);
@@ -168,7 +167,7 @@ partial class MainForm
 
         splitContainer.Panel2.Controls.Add(rightPanel);
         _ripTab.Controls.Add(splitContainer);
-        splitContainer.SplitterDistance = 300;
+        splitContainer.SplitterDistance = 360;
     }
 
     private void BuildContinueTab()
@@ -192,15 +191,15 @@ partial class MainForm
         };
 
         var y = 8;
-        AddLabel(leftPanel, "TITLE (required)", ref y);
+        AddLabel(leftPanel, "TITLE", ref y);
         _contTitle = AddTextBox(leftPanel, ref y);
         y += 8;
 
-        AddLabel(leftPanel, "FROM STEP", ref y);
-        _contFromStep = AddComboBox(leftPanel, ["handbrake", "organize", "open"], ref y);
+        AddLabel(leftPanel, "RESUME FROM", ref y);
+        _contFromStep = AddComboBox(leftPanel, ["HandBrake", "Organize", "Open"], ref y);
         y += 8;
 
-        AddLabel(leftPanel, "CONTENT TYPE", ref y);
+        AddLabel(leftPanel, "TYPE", ref y);
         _contContentType = AddComboBox(leftPanel, Enum.GetNames<Models.ContentType>(), ref y);
         _contContentType.SelectedIndexChanged += (_, _) => UpdateContinueSeriesVisibility();
         y += 4;
@@ -213,7 +212,7 @@ partial class MainForm
             Text = "SERIES OPTIONS",
             ForeColor = Color.FromArgb(180, 180, 180),
             Location = new Point(12, y),
-            Size = new Size(260, 80),
+            Size = new Size(330, 80),
             Font = new Font("Segoe UI", 8.5f)
         };
         _contSeason = AddNumericInGroup(_contSeriesGroup, "Season:", 0, 0, 99, 12, 24);
@@ -221,18 +220,17 @@ partial class MainForm
         leftPanel.Controls.Add(_contSeriesGroup);
         y += 90;
 
-        AddLabel(leftPanel, "DISC SETTINGS", ref y);
-        _contDisc = AddNumericField(leftPanel, "Disc #:", 1, 1, 99, ref y);
+        _contDisc = AddNumericField(leftPanel, "Disc number:", 1, 1, 99, ref y);
 
-        AddLabel(leftPanel, "Output:", ref y, indent: true);
+        AddLabel(leftPanel, "SAVE TO", ref y);
         _contOutputDrive = AddComboBox(leftPanel, [], ref y);
         y += 8;
 
-        AddLabel(leftPanel, "FLAGS", ref y);
-        _contExtras = AddCheckBox(leftPanel, "Extras disc", ref y);
+        AddLabel(leftPanel, "OPTIONS", ref y);
+        _contExtras = AddCheckBox(leftPanel, "This is an extras/bonus disc", ref y);
         y += 16;
 
-        _contStartButton = AddButton(leftPanel, "Start Continue", ref y, primary: true);
+        _contStartButton = AddButton(leftPanel, "Resume", ref y, primary: true);
         _contStartButton.Click += ContinueStartButton_Click;
         _contStopButton = AddButton(leftPanel, "Stop", ref y, primary: false);
         _contStopButton.Enabled = false;
@@ -262,7 +260,7 @@ partial class MainForm
 
         splitContainer.Panel2.Controls.Add(rightPanel);
         _continueTab.Controls.Add(splitContainer);
-        splitContainer.SplitterDistance = 300;
+        splitContainer.SplitterDistance = 360;
     }
 
     private void BuildSettingsTab()
@@ -274,7 +272,7 @@ partial class MainForm
         };
 
         var y = 20;
-        AddLabel(panel, "SCRIPT DIRECTORY", ref y, color: Color.FromArgb(180, 180, 180));
+        AddLabel(panel, "SCRIPTS FOLDER", ref y, color: Color.FromArgb(180, 180, 180));
         _settingsScriptDir = AddTextBox(panel, ref y, width: 400);
         _settingsBrowseScript = new Button
         {
@@ -294,11 +292,11 @@ partial class MainForm
         panel.Controls.Add(_settingsBrowseScript);
         y += 12;
 
-        AddLabel(panel, "POWERSHELL EXECUTABLE", ref y, color: Color.FromArgb(180, 180, 180));
+        AddLabel(panel, "POWERSHELL PATH", ref y, color: Color.FromArgb(180, 180, 180));
         _settingsPsPath = AddTextBox(panel, ref y, width: 400);
         y += 12;
 
-        AddLabel(panel, "DEFAULT DRIVE", ref y, color: Color.FromArgb(180, 180, 180));
+        AddLabel(panel, "DEFAULT SOURCE DRIVE", ref y, color: Color.FromArgb(180, 180, 180));
         _settingsDefaultDrive = AddTextBox(panel, ref y, width: 100);
         y += 12;
 
@@ -306,7 +304,7 @@ partial class MainForm
         _settingsDefaultDriveIndex = AddNumericField(panel, "", -1, -1, 99, ref y);
         y += 12;
 
-        AddLabel(panel, "DEFAULT OUTPUT DRIVE", ref y, color: Color.FromArgb(180, 180, 180));
+        AddLabel(panel, "DEFAULT SAVE DRIVE", ref y, color: Color.FromArgb(180, 180, 180));
         _settingsDefaultOutputDrive = AddTextBox(panel, ref y, width: 100);
         y += 24;
 
@@ -332,7 +330,7 @@ partial class MainForm
         y += 20;
     }
 
-    private static TextBox AddTextBox(Panel parent, ref int y, int width = 260)
+    private static TextBox AddTextBox(Panel parent, ref int y, int width = 330)
     {
         var tb = new TextBox
         {
@@ -368,7 +366,7 @@ partial class MainForm
         var cb = new ComboBox
         {
             Location = new Point(12, y),
-            Size = new Size(260, 24),
+            Size = new Size(330, 24),
             DropDownStyle = ComboBoxStyle.DropDownList,
             BackColor = Color.FromArgb(51, 51, 55),
             ForeColor = Color.White,
@@ -399,7 +397,7 @@ partial class MainForm
 
         var nud = new NumericUpDown
         {
-            Location = new Point(string.IsNullOrEmpty(label) ? 12 : 100, y),
+            Location = new Point(string.IsNullOrEmpty(label) ? 12 : 120, y),
             Size = new Size(70, 24),
             Minimum = min,
             Maximum = max,
@@ -448,7 +446,7 @@ partial class MainForm
         {
             Text = text,
             Location = new Point(12, y),
-            Size = new Size(260, 34),
+            Size = new Size(330, 34),
             FlatStyle = FlatStyle.Flat,
             BackColor = primary ? Color.FromArgb(0, 122, 204) : Color.FromArgb(60, 60, 60),
             ForeColor = Color.White,
